@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_equran/presentation/bookmarkpage/bookmark_page.dart';
+import 'package:my_equran/presentation/detailsurahpage/bloc/detailsurah_bloc.dart';
 import 'package:my_equran/presentation/surahpage/bloc/listsurahbloc.dart';
 import 'package:my_equran/presentation/surahpage/surahpage.dart';
 import 'injection.dart' as di;
@@ -12,7 +13,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<SurahBloc>(create: (context) => di.locator<SurahBloc>())
+        BlocProvider<SurahBloc>(create: (context) => di.locator<SurahBloc>()),
+        BlocProvider<DetailsurahBloc>(create: (context) => di.locator<DetailsurahBloc>())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -44,7 +46,10 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _pages,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {

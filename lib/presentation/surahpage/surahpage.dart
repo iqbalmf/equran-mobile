@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_equran/domain/entities/surah_entity.dart';
+import 'package:my_equran/presentation/detailsurahpage/detail_surah_page.dart';
 import 'package:my_equran/presentation/surahpage/bloc/listsurahbloc.dart';
 import 'package:my_equran/presentation/surahpage/bloc/listsurahstate.dart';
 import 'package:my_equran/presentation/surahpage/item/item_surah.dart';
@@ -21,9 +22,11 @@ class _HomePageState extends State<HomePage>
   void initState() {
     super.initState();
     scrollController = ScrollController();
-    if (scrollPosition != null) {
-      scrollController.jumpTo(scrollPosition!);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollPosition != null) {
+        scrollController.jumpTo(scrollPosition!);
+      }
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<SurahBloc>().getListSurah();
@@ -42,10 +45,13 @@ class _HomePageState extends State<HomePage>
     super.build(context);
     return BlocConsumer<SurahBloc, SurahState>(
       listener: (context, state) {
-        if (state.surah.isEmpty && (!state.isLoading!)) {
-          context
-              .read<SurahBloc>()
-              .getListSurah(); // Trigger fetch on first load
+        if (state.message != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message!)),
+          );
+        }
+        if(state.surah.isNotEmpty){
+          filterSurah = state.surah;
         }
       },
       builder: (context, state) {
@@ -55,30 +61,63 @@ class _HomePageState extends State<HomePage>
           ),
           body: state.isLoading!
               ? Center(
-                  child: CircularProgressIndicator(),
-                )
+            child: CircularProgressIndicator(),
+          )
               : Container(color: Colors.white70, child: listOfSurah(state)),
         );
       },
     );
   }
 
+  List<SurahEntity> filterSurah = [];
+  Future<void> searchSurah(String search, {List<SurahEntity>? listSurat}) async {
+      setState(() {
+        filterSurah = listSurat
+            ?.where((surah) =>
+            surah.namaLatin.toLowerCase().contains(search.toLowerCase()))
+            .toList() ?? [];
+      });
+  }
+
   Widget listOfSurah(SurahState surahState) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: ListView.builder(
-        itemBuilder: (context, index) {
-          SurahEntity surah = surahState.surah[index];
-          return ItemSurah(
-              surahEntity: surah,
-              onTap: () {
-                print(surah.namaLatin);
-              });
-        },
-        controller: scrollController,
-        itemCount: surahState.surah.length,
-        shrinkWrap: true,
-        physics: ScrollPhysics(),
+      child: Column(
+        children: [
+          TextField(
+            onChanged: (q) => searchSurah(q, listSurat: surahState.surah),
+            decoration: InputDecoration(
+              hintText: "Search",
+              prefix: Icon(Icons.search),
+              border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+          SizedBox(height: 10),
+          Expanded(
+            child: ListView.builder(
+              controller: scrollController,
+              itemBuilder: (context, index) {
+                SurahEntity surah = filterSurah[index];
+                return ItemSurah(
+                    surahEntity: surah,
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  DetailSurahPage(
+                                      surahName: surah.namaLatin, noSurah: surah.id)
+                          )
+                      );
+
+                    });
+              },
+              itemCount: filterSurah.length,
+              shrinkWrap: true,
+              physics: ScrollPhysics(),
+            ),
+          ),
+        ],
       ),
     );
   }

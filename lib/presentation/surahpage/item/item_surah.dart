@@ -24,13 +24,17 @@ class _ItemSurahState extends State<ItemSurah> {
           child: Container(
               width: MediaQuery.of(context).size.width * 0.6,
               padding: EdgeInsets.only(left: 10, top: 5, bottom: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Text(
+                    "${widget.surahEntity.id.toString()}.",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
                         widget.surahEntity.namaLatin,
@@ -38,24 +42,14 @@ class _ItemSurahState extends State<ItemSurah> {
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        widget.surahEntity.deskripsi,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 10, fontWeight: FontWeight.w200),
-                      ),
+                      Text("diturunkan di:\n${widget.surahEntity.tempatTurun}")
                     ],
                   ),
-                  Row(
-                    children: [
-                      Icon(Icons.place, size: 13, color: Colors.black),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text(widget.surahEntity.tempatTurun),
-                    ],
-                  )
+                  Text(
+                    widget.surahEntity.nama,
+                    style: TextStyle(
+                        fontSize: 23, fontWeight: FontWeight.bold),
+                  ),
                 ],
               )),
         ),

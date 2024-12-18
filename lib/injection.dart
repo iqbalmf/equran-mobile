@@ -7,6 +7,7 @@ import 'package:my_equran/domain/repository/surah_repository.dart';
 import 'package:my_equran/domain/usecase/get_detail_surah_usecase.dart';
 import 'package:my_equran/domain/usecase/get_surah_usecase.dart';
 import 'package:my_equran/domain/usecase/get_tafsir_surah_usecase.dart';
+import 'package:my_equran/presentation/detailsurahpage/bloc/detailsurah_bloc.dart';
 import 'package:my_equran/presentation/surahpage/bloc/listsurahbloc.dart';
 import 'package:my_equran/utils/api_helper.dart';
 
@@ -27,4 +28,5 @@ Future<void> init() async {
   locator.registerLazySingleton(() => GetTafsirSurahUsecase(locator()));
 
   locator.registerFactory(() => SurahBloc(locator()));
+  locator.registerFactory(() => DetailsurahBloc(locator()));
 }
