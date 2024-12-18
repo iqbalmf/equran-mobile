@@ -9,7 +9,7 @@ enum EnvironmentApp {
 }
 
 class ConstantsApp {
-  static const String getSurah = "/surah/";
+  static const String getSurah = "/surat/";
   static const String getTafsir = "/tafsir/";
   static const String contentType = "application/json";
   static String baseUrl = "https://equran.id/api/v2";

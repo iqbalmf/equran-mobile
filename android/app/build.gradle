@@ -44,6 +44,21 @@ android {
         versionName = flutterVersionName
     }
 
+    flavorDimensions "equran"
+
+    productFlavors {
+        dev {
+            dimension "equran"
+            resValue "string", "app_name", "Equran DEV"
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+        }
+        prod {
+            dimension "equran"
+            resValue "string", "app_name", "Equran"
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.

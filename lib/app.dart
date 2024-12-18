@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:my_equran/presentation/pages/bookmark_page.dart';
-import 'package:my_equran/presentation/pages/homepage.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_equran/presentation/bookmarkpage/bookmark_page.dart';
+import 'package:my_equran/presentation/surahpage/bloc/listsurahbloc.dart';
+import 'package:my_equran/presentation/surahpage/surahpage.dart';
+import 'injection.dart' as di;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'E-Quran App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<SurahBloc>(create: (context) => di.locator<SurahBloc>())
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'E-Quran App',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: BottomNavigation(),
       ),
-      home: BottomNavigation(),
     );
   }
 }
