@@ -5,6 +5,8 @@ import 'package:my_equran/domain/entities/ayat_entity.dart';
 import 'package:my_equran/domain/entities/surah_entity.dart';
 import 'package:my_equran/presentation/detailsurahpage/bloc/detailsurah_bloc.dart';
 import 'package:my_equran/presentation/detailsurahpage/bloc/detailsurah_state.dart';
+import 'package:my_equran/presentation/detailsurahpage/item/ayat_item.dart';
+import 'package:my_equran/presentation/detailsurahpage/item/detail_header.dart';
 import 'package:my_equran/presentation/surahpage/item/item_surah.dart';
 
 class DetailSurahPage extends StatefulWidget {
@@ -57,61 +59,62 @@ class _DetailSurahPageState extends State<DetailSurahPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              state.surah?.nama ?? "-",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-            Text(
-              state.surah?.namaLatin ?? "-",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-            Text(
-              state.surah?.arti ?? "-",
-              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 18),
-            ),
-            Html(data: state.surah?.deskripsi ?? "",),
-            ListView.builder(
-                          itemBuilder: (context, index) {
-            AyatEntity ayat = state.surah!.ayatEntity![index];
-            return Column(
+            Stack(
               children: [
-                Text(ayat.textArab),
-                Text(ayat.textLatin),
-                Text(ayat.textIndonesia),
+                DetailHeader(surah: state.surah),
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: InkWell(
+                    onTap: () {
+                      // todo play audio surah
+                      print("play audio");
+                    },
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.purple.withOpacity(0.6),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.play_arrow,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 10,
+                  left: 10,
+                  child: InkWell(
+                    onTap: () {
+                      //todo go to tafsir
+                      print("go to tafsir");
+                    },
+                    child: Image.asset(
+                      'assets/open-book.png',
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
               ],
-            );
-                          },
-                          itemCount: state.surah?.ayatEntity?.length ?? 0,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                        )
+            ),
+            ListView.builder(
+              itemBuilder: (context, index) {
+                AyatEntity ayat = state.surah!.ayatEntity![index];
+                return AyatItem(ayatEntity: ayat);
+              },
+              itemCount: state.surah?.ayatEntity?.length ?? 0,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+            )
           ],
         ),
       ),
     );
-  }
-
-  List<TextSpan> parseDynamicText(String text) {
-    final List<TextSpan> spans = [];
-    final RegExp regex = RegExp(r"<i>(.*?)<\/i>|<br>|([^<]+)");
-    final matches = regex.allMatches(text);
-
-    for (final match in matches) {
-      if (match.group(1) != null) {
-        // Handle <i> italic text
-        spans.add(TextSpan(
-          text: match.group(1),
-          style: TextStyle(fontStyle: FontStyle.italic),
-        ));
-      } else if (match.group(0) == '<br>') {
-        // Handle <br> as a line break
-        spans.add(TextSpan(text: '\n\n'));
-      } else if (match.group(2) != null) {
-        // Handle regular text
-        spans.add(TextSpan(text: match.group(2)));
-      }
-    }
-
-    return spans;
   }
 }

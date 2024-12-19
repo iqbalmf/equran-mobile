@@ -17,38 +17,49 @@ class _ItemSurahState extends State<ItemSurah> {
     return InkWell(
       onTap: widget.onTap,
       child: Container(
+        margin: EdgeInsets.symmetric(vertical: 8),
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
           child: Container(
               width: MediaQuery.of(context).size.width * 0.6,
-              padding: EdgeInsets.only(left: 10, top: 5, bottom: 10),
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.symmetric(vertical: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    "${widget.surahEntity.id.toString()}.",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  Row(
                     children: [
                       Text(
-                        widget.surahEntity.namaLatin,
-                        maxLines: 1,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                        "${widget.surahEntity.id.toString()}.",
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                      Text("diturunkan di:\n${widget.surahEntity.tempatTurun}")
+                      SizedBox(width: 8,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.surahEntity.namaLatin,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Text('arti: '+widget.surahEntity.arti, style: TextStyle(fontStyle: FontStyle.italic),)
+                        ],
+                      ),
                     ],
                   ),
-                  Text(
-                    widget.surahEntity.nama,
-                    style: TextStyle(
-                        fontSize: 23, fontWeight: FontWeight.bold),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      widget.surahEntity.nama,
+                      style: TextStyle(
+                          fontSize: 23, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ],
               )),
