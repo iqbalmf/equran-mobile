@@ -51,9 +51,9 @@ class _TafsirSurahPageState extends State<TafsirSurahPage> {
 
   Widget detailTafsir(TafsirState tafsir) {
     return Container(
-      width: MediaQuery.of(context).size.width - 10,
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      margin: EdgeInsets.symmetric(vertical: 8),
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      margin: EdgeInsets.only(bottom: 8),
       child: ListView.builder(
         itemBuilder: (context, index) {
           TafsirEntity tafsirEntity = tafsir.surah!.tafsirEntity![index];

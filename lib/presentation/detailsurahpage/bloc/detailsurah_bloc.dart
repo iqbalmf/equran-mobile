@@ -17,4 +17,12 @@ class DetailsurahBloc extends Cubit<DetailsurahState> {
       emit(state.copyWith(isloading: false, message: e.toString()));
     }
   }
+
+  playAudio(){
+    emit(state.copyWith(isPlayAudio: true, isloading: false));
+  }
+
+  pauseAudio(){
+    emit(state.copyWith(isPlayAudio: false, isloading: false));
+  }
 }

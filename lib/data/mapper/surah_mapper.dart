@@ -1,3 +1,4 @@
+import 'package:my_equran/data/mapper/audio_mapper.dart';
 import 'package:my_equran/data/mapper/ayat_mapper.dart';
 import 'package:my_equran/data/model/surah_model.dart';
 import 'package:my_equran/domain/entities/surah_entity.dart';
@@ -24,6 +25,7 @@ class SurahMapper {
         arti: surahModel.arti ?? '',
         jumlahAyat: surahModel.jumlahAyat ?? 0,
         deskripsi: surahModel.deskripsi ?? '',
+        audioFullSurah: surahModel.audioFull != null ? AudioMapper.toAudioEntity(surahModel.audioFull!) : null,
         ayatEntity: List.from((surahModel.ayat ?? [])
             .map((item) => AyatMapper.toAyatEntity(item, item.audio!))
             .toList()));

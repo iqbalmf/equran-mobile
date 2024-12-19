@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_equran/domain/entities/ayat_entity.dart';
@@ -18,10 +19,54 @@ class DetailSurahPage extends StatefulWidget {
 }
 
 class _DetailSurahPageState extends State<DetailSurahPage> {
+  late AudioPlayer _audioPlayer;
+  bool loadingAudio = false;
+
   @override
   void initState() {
     super.initState();
+    _audioPlayer = AudioPlayer();
     context.read<DetailsurahBloc>().getDetailSurah(widget.noSurah);
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  void playAudio(String audioUrl) async {
+    setState(() {
+      loadingAudio = true;
+    });
+    try {
+      await _audioPlayer.play(UrlSource(audioUrl));
+      context.read<DetailsurahBloc>().playAudio();
+    } catch (e) {
+      setState(() {
+        loadingAudio = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error playing audio: $e')),
+      );
+    } finally {
+      setState(() {
+        loadingAudio = false;
+      });
+    }
+  }
+
+  void pauseAudio() async {
+    await _audioPlayer.pause();
+    context.read<DetailsurahBloc>().pauseAudio();
+  }
+
+  void stopAudio() async {
+    await _audioPlayer.stop();
+  }
+
+  void resumeAudio() async {
+    await _audioPlayer.resume();
   }
 
   @override
@@ -65,21 +110,32 @@ class _DetailSurahPageState extends State<DetailSurahPage> {
                   right: 10,
                   child: InkWell(
                     onTap: () {
-                      // todo play audio surah
-                      print("play audio");
+                      if (state.isPlayAudio ?? false) {
+                        pauseAudio();
+                      } else {
+                        playAudio(
+                            state.surah?.audioFullSurah?.abdullah_al_juhany ??
+                                "");
+                      }
                     },
-                    child: Container(
+                    child: loadingAudio ? CircularProgressIndicator() : Container(
                       width: 50,
                       height: 50,
                       decoration: BoxDecoration(
                         color: Colors.purple.withOpacity(0.6),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
-                        Icons.play_arrow,
-                        color: Colors.white,
-                        size: 30,
-                      ),
+                      child: !state.isPlayAudio!
+                          ? const Icon(
+                              Icons.play_arrow,
+                              color: Colors.white,
+                              size: 30,
+                            )
+                          : const Icon(
+                              Icons.pause,
+                              color: Colors.white,
+                              size: 30,
+                            ),
                     ),
                   ),
                 ),
@@ -88,7 +144,6 @@ class _DetailSurahPageState extends State<DetailSurahPage> {
                   left: 10,
                   child: InkWell(
                     onTap: () {
-                      //todo go to tafsir
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -96,11 +151,17 @@ class _DetailSurahPageState extends State<DetailSurahPage> {
                                   surahName: state.surah?.namaLatin ?? "",
                                   noSurah: state.surah?.id ?? -1)));
                     },
-                    child: Image.asset(
-                      'assets/open-book.png',
-                      width: 50,
-                      height: 50,
-                      fit: BoxFit.cover,
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          'assets/open-book.png',
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                          color: Colors.purple.withOpacity(0.6),
+                        ),
+                        Text("Tafsir", style: TextStyle(fontSize: 14, color: Colors.purple),)
+                      ],
                     ),
                   ),
                 ),
