@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:my_equran/domain/entities/ayat_entity.dart';
-import 'package:my_equran/domain/entities/surah_entity.dart';
 import 'package:my_equran/presentation/detailsurahpage/bloc/detailsurah_bloc.dart';
 import 'package:my_equran/presentation/detailsurahpage/bloc/detailsurah_state.dart';
 import 'package:my_equran/presentation/detailsurahpage/item/ayat_item.dart';
 import 'package:my_equran/presentation/detailsurahpage/item/detail_header.dart';
-import 'package:my_equran/presentation/surahpage/item/item_surah.dart';
+import 'package:my_equran/presentation/tafsirsurahpage/tafsir_surah_page.dart';
 
 class DetailSurahPage extends StatefulWidget {
   DetailSurahPage({super.key, required this.surahName, required this.noSurah});
@@ -91,7 +89,12 @@ class _DetailSurahPageState extends State<DetailSurahPage> {
                   child: InkWell(
                     onTap: () {
                       //todo go to tafsir
-                      print("go to tafsir");
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TafsirSurahPage(
+                                  surahName: state.surah?.namaLatin ?? "",
+                                  noSurah: state.surah?.id ?? -1)));
                     },
                     child: Image.asset(
                       'assets/open-book.png',

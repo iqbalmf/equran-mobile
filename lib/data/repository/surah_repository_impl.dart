@@ -55,14 +55,17 @@ class SurahRepositoryImpl extends SurahRepository {
   Future<Either<Exception, SurahEntity>> getTafsirFromSurah(int noSurah) async {
     try {
       final result = await surahRemoteDatasource.getTafsirFromSurah(noSurah);
-      final response = SurahMapper.toTafsirSurahEntity(result.data['data']);
+      SurahModel surahModel = SurahModel.fromJson(result.data['data']);
+      final response = SurahMapper.toTafsirSurahEntity(surahModel);
       return Right(response);
     } on DioException catch (e) {
+      print(e.message);
       return Left(ServerFailure(
         message: e.response?.statusMessage ?? '',
         httpStatus: e.response?.statusCode ?? -1,
       ));
     } catch (e) {
+      print(e.toString());
       return Left(ServerFailure(message: e.toString()));
     }
   }

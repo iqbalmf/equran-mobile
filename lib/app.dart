@@ -4,6 +4,7 @@ import 'package:my_equran/presentation/bookmarkpage/bookmark_page.dart';
 import 'package:my_equran/presentation/detailsurahpage/bloc/detailsurah_bloc.dart';
 import 'package:my_equran/presentation/surahpage/bloc/listsurahbloc.dart';
 import 'package:my_equran/presentation/surahpage/surahpage.dart';
+import 'package:my_equran/presentation/tafsirsurahpage/bloc/tafsir_bloc.dart';
 import 'injection.dart' as di;
 
 class MyApp extends StatelessWidget {
@@ -14,7 +15,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<SurahBloc>(create: (context) => di.locator<SurahBloc>()),
-        BlocProvider<DetailsurahBloc>(create: (context) => di.locator<DetailsurahBloc>())
+        BlocProvider<DetailsurahBloc>(create: (context) => di.locator<DetailsurahBloc>()),
+        BlocProvider<TafsirBloc>(create: (context) => di.locator<TafsirBloc>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

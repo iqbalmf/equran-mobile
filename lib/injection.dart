@@ -9,6 +9,7 @@ import 'package:my_equran/domain/usecase/get_surah_usecase.dart';
 import 'package:my_equran/domain/usecase/get_tafsir_surah_usecase.dart';
 import 'package:my_equran/presentation/detailsurahpage/bloc/detailsurah_bloc.dart';
 import 'package:my_equran/presentation/surahpage/bloc/listsurahbloc.dart';
+import 'package:my_equran/presentation/tafsirsurahpage/bloc/tafsir_bloc.dart';
 import 'package:my_equran/utils/api_helper.dart';
 
 final locator = GetIt.instance;
@@ -29,4 +30,5 @@ Future<void> init() async {
 
   locator.registerFactory(() => SurahBloc(locator()));
   locator.registerFactory(() => DetailsurahBloc(locator()));
+  locator.registerFactory(() => TafsirBloc(locator()));
 }

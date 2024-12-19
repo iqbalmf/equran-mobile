@@ -38,7 +38,7 @@ class SurahModel {
         ? List<Ayat>.from(json['ayat'].map((g) => Ayat.fromJson(g)))
         : null;
     tafsir = json['tafsir'] != null
-        ? List<Tafsir>.from(json['tafisr'].map((t) => Tafsir.fromJson(t)))
+        ? List<Tafsir>.from(json['tafsir'].map((t) => Tafsir.fromJson(t)))
         : null;
   }
 }
