@@ -54,14 +54,21 @@ class _TafsirSurahPageState extends State<TafsirSurahPage> {
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.symmetric(horizontal: 8),
       margin: EdgeInsets.only(bottom: 8),
-      child: ListView.builder(
-        itemBuilder: (context, index) {
-          TafsirEntity tafsirEntity = tafsir.surah!.tafsirEntity![index];
-          return TafsirItem(tafsirEntity: tafsirEntity,);
-        },
-        itemCount: tafsir.surah?.tafsirEntity?.length ?? 0,
-        shrinkWrap: true,
-        physics: ScrollPhysics(),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Text("Tafsir Surah ${widget.surahName}", style: TextStyle(fontWeight: FontWeight.normal, fontSize: 18),),
+            ListView.builder(
+              itemBuilder: (context, index) {
+                TafsirEntity tafsirEntity = tafsir.surah!.tafsirEntity![index];
+                return TafsirItem(tafsirEntity: tafsirEntity,);
+              },
+              itemCount: tafsir.surah?.tafsirEntity?.length ?? 0,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+            ),
+          ],
+        ),
       ),
     );
   }
