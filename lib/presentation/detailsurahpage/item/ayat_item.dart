@@ -3,8 +3,10 @@ import 'package:my_equran/domain/entities/ayat_entity.dart';
 
 class AyatItem extends StatelessWidget {
   final AyatEntity ayatEntity;
+  final bool isPlayAudio;
 
-  const AyatItem({super.key, required this.ayatEntity});
+  const AyatItem(
+      {super.key, required this.ayatEntity, this.isPlayAudio = false});
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +26,58 @@ class AyatItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-              color: Colors.purple.withOpacity(0.6),
-              shape: BoxShape.circle,
-            ),
-            child: Center(child: Text(ayatEntity.nomorAyat.toString(),style: TextStyle(color: Colors.white),))
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                  child: Center(
+                      child: Text(
+                    ayatEntity.nomorAyat.toString(),
+                    style: TextStyle(color: Colors.purple, fontWeight: FontWeight.bold),
+                  ))),
+              Row(
+                children: [
+                  isPlayAudio
+                      ? Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: Colors.purple.withOpacity(0.6),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.stop,
+                            color: Colors.white,
+                            size: 20,
+                          ))
+                      : Container(),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: Colors.purple.withOpacity(0.6),
+                        shape: BoxShape.circle,
+                      ),
+                      child: isPlayAudio
+                          ? Icon(
+                              Icons.pause,
+                              color: Colors.white,
+                              size: 20,
+                            )
+                          : Icon(
+                              Icons.play_arrow,
+                              color: Colors.white,
+                              size: 20,
+                            )),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 10,
           ),
           Container(
             width: MediaQuery.of(context).size.width - 20,
@@ -52,10 +98,15 @@ class AyatItem extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 12,),
+          SizedBox(
+            height: 12,
+          ),
           Text(
             ayatEntity.textIndonesia,
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal, fontStyle: FontStyle.italic),
+            style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.normal,
+                fontStyle: FontStyle.italic),
             textAlign: TextAlign.left,
           )
         ],

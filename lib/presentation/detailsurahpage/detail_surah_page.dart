@@ -109,44 +109,45 @@ class _DetailSurahPageState extends State<DetailSurahPage> {
           children: [
             Stack(
               children: [
-                DetailHeader(surah: state.surah),
+                DetailHeader(surah: state.surah, state: state),
+                // Positioned(
+                //   top: 10,
+                //   right: 10,
+                //   child: InkWell(
+                //     onTap: () {
+                //       if (state.isPlayAudio ?? false) {
+                //         pauseAudio();
+                //       } else {
+                //         playAudio(
+                //             state.surah?.audioFullSurah?.abdullah_al_juhany ?? "");
+                //       }
+                //     },
+                //     child: loadingAudio
+                //         ? CircularProgressIndicator()
+                //         : Container(
+                //             width: 50,
+                //             height: 50,
+                //             decoration: BoxDecoration(
+                //               color: Colors.purple.withOpacity(0.6),
+                //               shape: BoxShape.circle,
+                //             ),
+                //             child: !state.isPlayAudio!
+                //                 ? const Icon(
+                //                     Icons.play_arrow,
+                //                     color: Colors.white,
+                //                     size: 30,
+                //                   )
+                //                 : const Icon(
+                //                     Icons.pause,
+                //                     color: Colors.white,
+                //                     size: 30,
+                //                   ),
+                //           ),
+                //   ),
+                // ),
                 Positioned(
                   top: 10,
                   right: 10,
-                  child: InkWell(
-                    onTap: () {
-                      if (state.isPlayAudio ?? false) {
-                        pauseAudio();
-                      } else {
-                        playAudio(
-                            state.surah?.audioFullSurah?.abdullah_al_juhany ??
-                                "");
-                      }
-                    },
-                    child: loadingAudio ? CircularProgressIndicator() : Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.purple.withOpacity(0.6),
-                        shape: BoxShape.circle,
-                      ),
-                      child: !state.isPlayAudio!
-                          ? const Icon(
-                              Icons.play_arrow,
-                              color: Colors.white,
-                              size: 30,
-                            )
-                          : const Icon(
-                              Icons.pause,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 10,
-                  left: 10,
                   child: InkWell(
                     onTap: () {
                       Navigator.push(
@@ -165,7 +166,10 @@ class _DetailSurahPageState extends State<DetailSurahPage> {
                           fit: BoxFit.cover,
                           color: Colors.purple.withOpacity(0.6),
                         ),
-                        Text("Tafsir", style: TextStyle(fontSize: 14, color: Colors.purple),)
+                        Text(
+                          "Tafsir",
+                          style: TextStyle(fontSize: 14, color: Colors.purple),
+                        )
                       ],
                     ),
                   ),

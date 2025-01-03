@@ -13,6 +13,23 @@ class _AuthPageState extends State<AuthPage> {
   String? error;
 
   @override
+  void initState() {
+    super.initState();
+    FingerprintAuth.authenticate().then((isAuthenticated) {
+      if (isAuthenticated) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => BottomNavigation()), (
+            Route<dynamic> route) => false,
+        );
+      } else {
+        _showNotification(
+            context, "Authenticated Failed", "Your Biometric not registered!");
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
@@ -20,18 +37,21 @@ class _AuthPageState extends State<AuthPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () => {
+              onPressed: () =>
+              {
                 FingerprintAuth.authenticate().then((isAuthenticated) {
                   if (isAuthenticated) {
                     print("Authentication succeeded");
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => BottomNavigation())
-                      ,(Route<dynamic> route) => false,
+                      MaterialPageRoute(
+                          builder: (context) => BottomNavigation())
+                      , (Route<dynamic> route) => false,
                     );
                   } else {
                     print("Authentication failed");
-                    _showNotification(context, "Authenticated Failed", "Your Biometric not registered!");
+                    _showNotification(context, "Authenticated Failed",
+                        "Your Biometric not registered!");
                   }
                 })
               },

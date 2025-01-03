@@ -12,5 +12,5 @@ class ConstantsApp {
   static const String getSurah = "/surat/";
   static const String getTafsir = "/tafsir/";
   static const String contentType = "application/json";
-  static String baseUrl = "https://equran.id/api/v2";
+  static String baseUrl = dotenv.env['API_URL'] ?? '';
 }

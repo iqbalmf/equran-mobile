@@ -43,7 +43,7 @@ class MainActivity : FlutterFragmentActivity() {
                 ) {
                     super.onAuthenticationError(errorCode, errString)
                     if (errorCode != 10 && !resultSent) {
-                        result.success(false)
+                        result.error("AUTHFAILED", errString.toString(), null)
                         resultSent = true;
                     }
                 }
@@ -61,18 +61,23 @@ class MainActivity : FlutterFragmentActivity() {
                 override fun onAuthenticationFailed() {
                     super.onAuthenticationFailed()
                     if (!resultSent) {
-                        result.success(false)
+                        result.error("AUTHFAILED", "Authentication failed", null)
                         resultSent = true;
                     }
                 }
             })
 
-        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+        val promptInfoBuilder = BiometricPrompt.PromptInfo.Builder()
             .setTitle("Biometric Authentication")
             .setSubtitle("Use your fingerprint to authenticate")
-            .setAllowedAuthenticators(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)
             .setConfirmationRequired(false)
-            .build()
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            promptInfoBuilder.setAllowedAuthenticators(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)
+        } else {
+            promptInfoBuilder.setDeviceCredentialAllowed(true)
+        }
+        val promptInfo = promptInfoBuilder.build()
 
         biometricPrompt.authenticate(promptInfo)
     }
