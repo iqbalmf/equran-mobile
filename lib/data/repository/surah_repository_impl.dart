@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:my_equran/core/error/exceptions.dart';
 import 'package:my_equran/core/error/failures.dart';
 import 'package:my_equran/data/datasource/surah_remote_datasource.dart';
 import 'package:my_equran/data/mapper/surah_mapper.dart';
@@ -28,7 +29,7 @@ class SurahRepositoryImpl extends SurahRepository {
         httpStatus: e.response?.statusCode ?? -1,
       ));
     } catch (e) {
-      return Left(ServerFailure(message: e.toString()));
+      return Left(ServerFailure());
     }
   }
 
@@ -46,8 +47,14 @@ class SurahRepositoryImpl extends SurahRepository {
         httpStatus: e.response?.statusCode ?? -1,
       ));
     } catch (e) {
-      print(e.toString());
-      return Left(ServerFailure(message: e.toString()));
+      if (e is InternetException) {
+        return Left(ServerFailure(
+          message: 'No Internet Connection!',
+        ));
+      } else {
+        print(e.toString());
+        return Left(ServerFailure());
+      }
     }
   }
 
@@ -66,7 +73,7 @@ class SurahRepositoryImpl extends SurahRepository {
       ));
     } catch (e) {
       print(e.toString());
-      return Left(ServerFailure(message: e.toString()));
+      return Left(ServerFailure());
     }
   }
 }

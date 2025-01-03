@@ -7,6 +7,7 @@ import 'package:my_equran/presentation/detailsurahpage/bloc/detailsurah_state.da
 import 'package:my_equran/presentation/detailsurahpage/item/ayat_item.dart';
 import 'package:my_equran/presentation/detailsurahpage/item/detail_header.dart';
 import 'package:my_equran/presentation/tafsirsurahpage/tafsir_surah_page.dart';
+import 'package:my_equran/utils/network_status.dart';
 
 class DetailSurahPage extends StatefulWidget {
   DetailSurahPage({super.key, required this.surahName, required this.noSurah});
@@ -26,7 +27,11 @@ class _DetailSurahPageState extends State<DetailSurahPage> {
   void initState() {
     super.initState();
     _audioPlayer = AudioPlayer();
-    context.read<DetailsurahBloc>().getDetailSurah(widget.noSurah);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      context.read<DetailsurahBloc>().getDetailSurah(
+          widget.noSurah, await NetworkStatus.isNetworkOnline());
+    });
   }
 
   @override
@@ -82,7 +87,7 @@ class _DetailSurahPageState extends State<DetailSurahPage> {
             }
           },
           builder: (context, state) {
-            return state.isloading!
+            return state.isloading ?? false
                 ? Center(
                     child: CircularProgressIndicator(),
                   )

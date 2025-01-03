@@ -6,7 +6,7 @@ abstract class NetworkInfo{
 }
 
 class NetworkStatus implements NetworkInfo{
-  static const _platform = MethodChannel('network-status');
+  static const _platform = MethodChannel('com.equran.app/native');
 
   static Future<bool> isNetworkOnline() async {
     try {
@@ -25,3 +25,8 @@ class NetworkStatus implements NetworkInfo{
     return NetworkStatus.isNetworkOnline();
   }
 }
+
+//1. play audio per surat
+//2. tambahkan auto play per ayat
+//3. slide audio per surah
+//4. fingerprint untuk ke halaman utama -> native

@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:my_equran/core/app_config.dart';
 
 enum Flavor {
@@ -40,14 +41,14 @@ FlavorValues get flavorValues {
     case Flavor.prod:
       return FlavorValues(
         title: 'Movie List',
-        baseUrl: ConstantsApp.baseUrl,
+        baseUrl: dotenv.env['API_URL'] ?? '',
         flavor: _currentFlavor!,
       );
     case Flavor.dev:
     default:
       return FlavorValues(
         title: 'Movie List Dev',
-        baseUrl: ConstantsApp.baseUrl,
+        baseUrl: dotenv.env['API_URL'] ?? '',
         flavor: _currentFlavor ?? Flavor.dev,
       );
   }

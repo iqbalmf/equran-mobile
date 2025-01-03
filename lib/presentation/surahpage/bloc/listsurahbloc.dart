@@ -7,13 +7,15 @@ class SurahBloc extends Cubit<SurahState> {
 
   SurahBloc(this.getSurahUsecase) : super(SurahState());
 
-  getListSurah() async {
+  getListSurah(bool isOnline) async {
     emit(state.copyWith(isloading: true));
     try {
-      if(state.surah.isEmpty) {
+      if(isOnline && state.surah.isEmpty) {
         var result = await getSurahUsecase.execute();
-        result.fold((l) async => emit(state.copyWith(isloading: false)),
+        result.fold((l) async => emit(state.copyWith(isloading: false, message: l.toString())),
                 (r) async => emit(state.copyWith(surah: r, isloading: false)));
+      } else {
+        emit(state.copyWith(isloading: false, message: "No Internet Connection!"));
       }
     } on Exception catch (e) {
       emit(state.copyWith(isloading: false, message: e.toString()));

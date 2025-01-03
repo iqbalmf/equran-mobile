@@ -7,22 +7,24 @@ class DetailsurahBloc extends Cubit<DetailsurahState> {
 
   DetailsurahBloc(this.getDetailSurahUsecase) : super(DetailsurahState());
 
-  getDetailSurah(int noSurah) async {
+  getDetailSurah(int noSurah, bool isOnline) async {
     emit(state.copyWith(isloading: true));
     try {
-      var result = await getDetailSurahUsecase.execute(noSurah);
-      result.fold((l) async => emit(state.copyWith(isloading: false, message: 'error')),
-          (r) async => emit(state.copyWith(surah: r, isloading: false)));
+        var result = await getDetailSurahUsecase.execute(noSurah);
+        result.fold(
+            (l) async =>
+                emit(state.copyWith(isloading: false, message: l.toString())),
+            (r) async => emit(state.copyWith(surah: r, isloading: false)));
     } on Exception catch (e) {
       emit(state.copyWith(isloading: false, message: e.toString()));
     }
   }
 
-  playAudio(){
+  playAudio() {
     emit(state.copyWith(isPlayAudio: true, isloading: false));
   }
 
-  pauseAudio(){
+  pauseAudio() {
     emit(state.copyWith(isPlayAudio: false, isloading: false));
   }
 }

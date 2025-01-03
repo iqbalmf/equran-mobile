@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_equran/presentation/authpage/auth_page.dart';
 import 'package:my_equran/presentation/bookmarkpage/bookmark_page.dart';
 import 'package:my_equran/presentation/detailsurahpage/bloc/detailsurah_bloc.dart';
 import 'package:my_equran/presentation/surahpage/bloc/listsurahbloc.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: BottomNavigation(),
+        home: AuthPage(),
       ),
     );
   }

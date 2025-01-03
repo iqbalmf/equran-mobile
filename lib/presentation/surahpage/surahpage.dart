@@ -5,6 +5,7 @@ import 'package:my_equran/presentation/detailsurahpage/detail_surah_page.dart';
 import 'package:my_equran/presentation/surahpage/bloc/listsurahbloc.dart';
 import 'package:my_equran/presentation/surahpage/bloc/listsurahstate.dart';
 import 'package:my_equran/presentation/surahpage/item/item_surah.dart';
+import 'package:my_equran/utils/network_status.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,8 +29,10 @@ class _HomePageState extends State<HomePage>
       }
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SurahBloc>().getListSurah();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      context
+          .read<SurahBloc>()
+          .getListSurah(await NetworkStatus.isNetworkOnline());
     });
   }
 
