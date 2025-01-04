@@ -9,15 +9,15 @@ import 'package:my_equran/presentation/detailsurahpage/bloc/detailsurah_state.da
 class DetailHeader extends StatefulWidget {
   final SurahEntity? surah;
   final DetailsurahState state;
+  final AudioPlayer audioPlayer;
 
-  const DetailHeader({super.key, required this.surah, required this.state});
+  const DetailHeader({super.key, required this.surah, required this.state, required this.audioPlayer});
 
   @override
   State<DetailHeader> createState() => _DetailHeaderState();
 }
 
 class _DetailHeaderState extends State<DetailHeader> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
   Duration _currentPosition = Duration.zero;
   Duration _totalDuration = Duration.zero;
   bool loadingAudio = false;
@@ -25,19 +25,19 @@ class _DetailHeaderState extends State<DetailHeader> {
   @override
   void initState() {
     super.initState();
-    _audioPlayer.onDurationChanged.listen((duration) {
+    widget.audioPlayer.onDurationChanged.listen((duration) {
       setState(() {
         _totalDuration = duration;
       });
     });
 
-    _audioPlayer.onPositionChanged.listen((position) {
+    widget.audioPlayer.onPositionChanged.listen((position) {
       setState(() {
         _currentPosition = position;
       });
     });
 
-    _audioPlayer.onPlayerComplete.listen((event) {
+    widget.audioPlayer.onPlayerComplete.listen((event) {
       setState(() {
         _currentPosition = Duration.zero;
       });
@@ -46,7 +46,7 @@ class _DetailHeaderState extends State<DetailHeader> {
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
+    widget.audioPlayer.dispose();
     super.dispose();
   }
 
@@ -103,7 +103,7 @@ class _DetailHeaderState extends State<DetailHeader> {
                   max: _totalDuration.inSeconds.toDouble(),
                   onChanged: (value) async {
                     final position = Duration(seconds: value.toInt());
-                    await _audioPlayer.seek(position);
+                    await widget.audioPlayer.seek(position);
                   },
                 ),
                 Row(
@@ -132,7 +132,7 @@ class _DetailHeaderState extends State<DetailHeader> {
                                   color: Colors.white,
                                 ),
                                 onPressed: () async {
-                                  await _audioPlayer.pause();
+                                  await widget.audioPlayer.pause();
                                   context.read<DetailsurahBloc>().pauseAudio();
                                 },
                               )
@@ -151,7 +151,7 @@ class _DetailHeaderState extends State<DetailHeader> {
                                             ?.audioFullSurah
                                             ?.abdullah_al_juhany ??
                                         "";
-                                    await _audioPlayer
+                                    await widget.audioPlayer
                                         .play(UrlSource(audioUrl));
                                     context.read<DetailsurahBloc>().playAudio();
                                   } catch (e) {

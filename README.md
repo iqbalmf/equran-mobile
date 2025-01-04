@@ -24,9 +24,17 @@ This project is a Mobile Application for Reading Al-quran
 - Local Database: ObjectBox
 - Unit Testing: Mockito
 
+## Feature
+- Biometric Authentication
+- AudioPlayers
+- [ ] Caching
+
 ## Preview
 <img src="Screenshot_20241220_072710.png" width="300">
 <img src="Screenshot_20241220_072738.png" width="300">
 <img src="Screenshot_20241220_072752.png" width="300">
 <img src="Screenshot_20241220_072757.png" width="300">
+<img src="Screenshot_20250104_130404.jpg" width="300">
+<img src="Screenshot_20250104_130428.jpg" width="300">
+<img src="Screenshot_20250104_130442.jpg" width="300">
 

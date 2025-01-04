@@ -4,9 +4,11 @@ import 'package:my_equran/domain/entities/ayat_entity.dart';
 class AyatItem extends StatelessWidget {
   final AyatEntity ayatEntity;
   final bool isPlayAudio;
+  final Function() playAudio;
+  final Function() stopAudio;
 
   const AyatItem(
-      {super.key, required this.ayatEntity, this.isPlayAudio = false});
+      {super.key, required this.ayatEntity, this.isPlayAudio = false, required this.playAudio, required this.stopAudio});
 
   @override
   Widget build(BuildContext context) {
@@ -38,40 +40,46 @@ class AyatItem extends StatelessWidget {
               Row(
                 children: [
                   isPlayAudio
-                      ? Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            color: Colors.purple.withOpacity(0.6),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.stop,
-                            color: Colors.white,
-                            size: 20,
-                          ))
+                      ? InkWell(
+                    onTap: stopAudio,
+                        child: Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              color: Colors.purple.withOpacity(0.6),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.stop,
+                              color: Colors.white,
+                              size: 20,
+                            )),
+                      )
                       : Container(),
                   SizedBox(
                     width: 20,
                   ),
-                  Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: Colors.purple.withOpacity(0.6),
-                        shape: BoxShape.circle,
-                      ),
-                      child: isPlayAudio
-                          ? Icon(
-                              Icons.pause,
-                              color: Colors.white,
-                              size: 20,
-                            )
-                          : Icon(
-                              Icons.play_arrow,
-                              color: Colors.white,
-                              size: 20,
-                            )),
+                  InkWell(
+                    onTap: playAudio,
+                    child: Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.purple.withOpacity(0.6),
+                          shape: BoxShape.circle,
+                        ),
+                        child: isPlayAudio
+                            ? Icon(
+                                Icons.pause,
+                                color: Colors.white,
+                                size: 20,
+                              )
+                            : Icon(
+                                Icons.play_arrow,
+                                color: Colors.white,
+                                size: 20,
+                              )),
+                  ),
                 ],
               ),
             ],

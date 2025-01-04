@@ -22,22 +22,46 @@ class DetailSurahPage extends StatefulWidget {
 class _DetailSurahPageState extends State<DetailSurahPage> {
   late AudioPlayer _audioPlayer;
   bool loadingAudio = false;
+  int? _currentPlayingIndex;
+  bool _isPlaying = false;
+  late ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
     _audioPlayer = AudioPlayer();
+    _scrollController = ScrollController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       context.read<DetailsurahBloc>().getDetailSurah(
           widget.noSurah, await NetworkStatus.isNetworkOnline());
+    });
+
+    _audioPlayer.onPlayerComplete.listen((event) {
+      _playNextAyat();
     });
   }
 
   @override
   void dispose() {
     _audioPlayer.dispose();
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  void playAudioSurah(String audioUrl, int index) async {
+    if (_currentPlayingIndex == index && _isPlaying) {
+      await _audioPlayer.pause();
+      setState(() {
+        _isPlaying = false;
+      });
+    } else {
+      setState(() {
+        _currentPlayingIndex = index;
+        _isPlaying = true;
+      });
+      await _audioPlayer.play(UrlSource(audioUrl));
+    }
   }
 
   void playAudio(String audioUrl) async {
@@ -59,6 +83,39 @@ class _DetailSurahPageState extends State<DetailSurahPage> {
         loadingAudio = false;
       });
     }
+  }
+
+  void stopAudioAyat() async {
+    await _audioPlayer.stop();
+    setState(() {
+      _currentPlayingIndex = null;
+      _isPlaying = false;
+    });
+  }
+
+  void _playNextAyat() {
+    if (_currentPlayingIndex != null) {
+      int nextIndex = _currentPlayingIndex! + 1;
+      DetailsurahState state = context.read<DetailsurahBloc>().state;
+
+      if (nextIndex < (state.surah?.ayatEntity?.length ?? 0)) {
+        AyatEntity nextAyat = state.surah!.ayatEntity![nextIndex];
+        playAudioSurah(nextAyat.audioEntity.abdullah_al_juhany ?? '',
+            nextIndex);
+        _scrollToAyat(nextIndex);
+      } else {
+        stopAudio();
+      }
+    }
+  }
+
+  void _scrollToAyat(int index) {
+    double position = index * 100.0;
+    _scrollController.animateTo(
+      position,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
   }
 
   void pauseAudio() async {
@@ -103,48 +160,14 @@ class _DetailSurahPageState extends State<DetailSurahPage> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
               children: [
-                DetailHeader(surah: state.surah, state: state),
-                // Positioned(
-                //   top: 10,
-                //   right: 10,
-                //   child: InkWell(
-                //     onTap: () {
-                //       if (state.isPlayAudio ?? false) {
-                //         pauseAudio();
-                //       } else {
-                //         playAudio(
-                //             state.surah?.audioFullSurah?.abdullah_al_juhany ?? "");
-                //       }
-                //     },
-                //     child: loadingAudio
-                //         ? CircularProgressIndicator()
-                //         : Container(
-                //             width: 50,
-                //             height: 50,
-                //             decoration: BoxDecoration(
-                //               color: Colors.purple.withOpacity(0.6),
-                //               shape: BoxShape.circle,
-                //             ),
-                //             child: !state.isPlayAudio!
-                //                 ? const Icon(
-                //                     Icons.play_arrow,
-                //                     color: Colors.white,
-                //                     size: 30,
-                //                   )
-                //                 : const Icon(
-                //                     Icons.pause,
-                //                     color: Colors.white,
-                //                     size: 30,
-                //                   ),
-                //           ),
-                //   ),
-                // ),
+                DetailHeader(surah: state.surah, state: state, audioPlayer: _audioPlayer,),
                 Positioned(
                   top: 10,
                   right: 10,
@@ -179,7 +202,13 @@ class _DetailSurahPageState extends State<DetailSurahPage> {
             ListView.builder(
               itemBuilder: (context, index) {
                 AyatEntity ayat = state.surah!.ayatEntity![index];
-                return AyatItem(ayatEntity: ayat);
+                return AyatItem(
+                    ayatEntity: ayat,
+                    isPlayAudio: _currentPlayingIndex == index && _isPlaying,
+                    playAudio: () => playAudioSurah(
+                        ayat.audioEntity.abdullah_al_juhany ?? '', index),
+                  stopAudio: () => stopAudioAyat(),
+                );
               },
               itemCount: state.surah?.ayatEntity?.length ?? 0,
               shrinkWrap: true,
